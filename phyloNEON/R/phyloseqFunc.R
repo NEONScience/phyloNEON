@@ -1,4 +1,6 @@
 
+library(phyloseq)
+library('vegan')
 
 makeOTU <- function(i){
   import_table <- read.table(i,header=TRUE,sep='\t',row.names=1, comment.char = "")

@@ -1,0 +1,76 @@
+##############################################################################################
+#' @title Convert NEON download to OTU frequency table for Phyloseq package
+#' @author 
+#' Hugh Cross \email{crossh@battelleecology.org}
+#' @description
+#' From Microbe Community Taxonomy tables downloaded from neonUtilities (expanded package), convert the PerSampleTaxonomy table to a frequency table ready to import to Phyloseq
+#' 
+#' 
+#' 
+##############################################################################################
+
+
+# parameters: neonUtilities object, 
+# Gene: "ITS" or "16S", 
+# sampleType: 'soil', 'benthic', or 'surface' 
+
+createFreqTable <- function(neonUtilObject, gene=NA, sampleType=NA){
+  
+  # check gene
+  if(!gene %in% c('ITS','16S')){
+    stop(paste(gene,"is not a valid entry for gene. Gene must be 16S or ITS",sep=" "))
+  }
+  
+  # check sample type 
+  if(!sampleType %in% c("soil","benthic","surface")){
+    stop(paste(sampleType, "is not a valid entry for sampleType. Must be either soil, benthic, or surface. Please make sure that you have downloaded the correct data product"))
+  }
+  
+  # get the right table 
+  if(gene == 'ITS'){
+    if(sampleType == 'soil'){
+      SEQTABLE = neonUtilObject$mct_soilPerSampleTaxonomy_ITS
+    } else if(sampleType == 'benthic'){
+      SEQTABLE = neonUtilObject$mct_benthicPerSampleTaxonomy_ITS
+    } else if(sampleType == 'surface'){
+      SEQTABLE = neonUtilObject$mct_surfaceWaterPerSampleTaxonomy_ITS
+    }
+  } else if(gene == '16S'){
+    if(sampleType == 'soil'){
+      SEQTABLE = neonUtilObject$mct_soilPerSampleTaxonomy_16S
+    } else if(sampleType == 'benthic'){
+      SEQTABLE = neonUtilObject$mct_benthicPerSampleTaxonomy_16S
+    } else if(sampleType == 'surface'){
+      SEQTABLE = neonUtilObject$mct_surfaceWaterPerSampleTaxonomy_16S
+  }}
+  
+  # check that table is right 
+  if(exists("SEQTABLE") && is.data.frame(get("SEQTABLE"))){
+    print('table found, proceeding with conversion')
+  } else {
+    stop("table not found, make sure you have the right sample type for the object")
+  }
+  
+  print('the dimensions of the table to be analyzed')
+  print(dim(SEQTABLE))
+  
+  # now convert 
+  freq.table1 <- SEQTABLE %>%
+    select(sequenceName,dnaSampleID,individualCount) %>%
+    pivot_wider(
+      names_from = dnaSampleID,
+      values_from = individualCount,
+    ) %>%
+    column_to_rownames(var = 'sequenceName') %>%
+    replace(is.na(.), 0)
+  
+  freq.table2 <- mutate_all(freq.table1, function(x) as.numeric(as.character(x)))
+  
+  otumat <- as.matrix(freq.table2)
+  
+  OTU = otu_table(otumat, taxa_are_rows = TRUE)
+  
+  return(OTU)
+  
+}
+
