@@ -12,7 +12,7 @@ This example uses basic functions of **phyloNEON** to convert data downloaded us
 
 #### Download MCT data with neonUtilities
 
-Maker sure to set the `package` parameter to 'expanded' to download the perSample tables.
+Make sure to set the `package` parameter to 'expanded' to download the perSample tables.
 
 ```
 library(neonUtilities)
@@ -25,3 +25,34 @@ soil.mct <- loadByProduct(
   site = c('BONA','HARV','NIWO'),
 
 ```
+
+#### Create OTU frequency table 
+
+The `createFreqTable` function will convert the downloaded neonUtilities data to a phyloseq frequency table object
+
+```
+library(phyloNEON)
+
+soil.mct.freq <- createFreqTable(soil.mct, gene = 'ITS', sampleType = 'soil')
+
+```
+
+#### Create taxa table 
+
+The `createTaxTable` function will convert the downloaded neonUtilities data to a phyloseq taxon table object
+
+```
+library(phyloNEON)
+
+
+soil.mct.tax <- createTaxTable(soil.mct, gene = 'ITS',
+                                sampleType = 'soil')
+
+
+```
+
+#### Create sample metadata table 
+
+
+
+
