@@ -6,6 +6,9 @@
 .RData
 .RDataTmp
 
+# annoying mac dsstore files
+.DS_Store
+
 # User-specific files
 .Ruserdata
 

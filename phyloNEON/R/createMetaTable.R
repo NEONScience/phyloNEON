@@ -3,9 +3,31 @@
 #' @author 
 #' Hugh Cross \email{crossh@battelleecology.org}
 #' @description
-#' From Microbe Community Taxonomy tables downloaded from neonUtilities (expanded package), convert the PerSampleTaxonomy table to a frequency table ready to import to Phyloseq
+#' From Microbe Community Taxonomy tables downloaded from neonUtilities (expanded package), extracts basic fields (e.g. siteID, collectDate) from the SampleMetadata table to a metadata table ready to import to Phyloseq
 #' 
 #' 
+#' @param neonUtilObject the object downloaded with neonUtilities loadByProduct
+#' @param gene the marker to process. Either 16S or ITS 
+#' @param sampleType either soil, benthic, or surface
+#' 
+#' 
+#' @return A table of basic metadata fields for each sample downloaded, extracted from sampleMetadata table. Ready to import to Phyloseq
+#' 
+#' 
+#' @examples
+#' \dontrun{
+#' # To convert community taxonomy data object downloaded with neonUtilities to Phyloseq-ready metadata table:
+#' benthic.meta.its <- createMetaTable(benthic.mct, gene='ITS', sampleType = 'benthic')
+#' }
+
+#' @references
+#' License: GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007
+
+#' @export
+
+# changelog and author contributions / copyrights
+#   Hugh Cross (2024-12-05)
+#     original creation
 #' 
 ##############################################################################################
 
@@ -57,7 +79,7 @@ createMetaTable <- function(neonUtilObject, gene=NA, sampleType=NA){
   print(dim(METATABLE))
   
   sample.meta <- METATABLE %>%
-    dplyr::select(selectFields) %>%
+    dplyr::select(all_of(selectFields)) %>%
     dplyr::mutate(sampleName = dnaSampleID) %>%
     dplyr::distinct(.keep_all = TRUE) %>%
     column_to_rownames(var = "dnaSampleID")

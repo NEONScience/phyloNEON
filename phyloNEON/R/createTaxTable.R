@@ -6,6 +6,27 @@
 #' From Microbe Community Taxonomy tables downloaded from neonUtilities (expanded package), convert the PerSampleTaxonomy table to a taxon table ready to import to Phyloseq
 #' 
 #' 
+#' @param neonUtilObject the object downloaded with neonUtilities loadByProduct
+#' @param gene the marker to process. Either 16S or ITS 
+#' @param sampleType either soil, benthic, or surface
+#' 
+#' 
+#' @return a data matrix of all OTUs downloaded and the taxonomic lineage for each. Ready to import to Phyloseq.
+#' 
+#' @examples
+#' \dontrun{
+#' # To convert community taxonomy data object downloaded with neonUtilities to Phyloseq-ready taxon table:
+#' benthic.tax.its <- createTaxTable(benthic.mct, gene='ITS', sampleType = 'benthic')
+#' }
+
+#' @references
+#' License: GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007
+
+#' @export
+
+# changelog and author contributions / copyrights
+#   Hugh Cross (2024-12-05)
+#     original creation
 #' 
 ##############################################################################################
 

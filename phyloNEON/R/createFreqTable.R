@@ -5,6 +5,26 @@
 #' @description
 #' From Microbe Community Taxonomy tables downloaded from neonUtilities (expanded package), convert the PerSampleTaxonomy table to a frequency table ready to import to Phyloseq
 #' 
+#' @param neonUtilObject the object downloaded with neonUtilities loadByProduct
+#' @param gene the marker to process. Either 16S or ITS 
+#' @param sampleType either soil, benthic, or surface
+#' 
+#' 
+#' @return A matrix of counts for each sample (columns) for each OTU (rows) from the downloaded data product. Ready to import to Phyloseq
+#' 
+#' @examples
+#' \dontrun{
+#' # To convert community taxonomy data object downloaded with neonUtilities to Phyloseq-ready OTU table:
+#' benthic.freq.its <- createFreqTable(benthic.mct, gene = 'ITS', sampleType = 'benthic')
+#' }
+#' @references
+#' License: GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007
+
+#' @export
+
+# changelog and author contributions / copyrights
+#   Hugh Cross (2024-12-05)
+#     original creation
 #' 
 #' 
 ##############################################################################################
@@ -51,8 +71,8 @@ createFreqTable <- function(neonUtilObject, gene=NA, sampleType=NA){
     stop("table not found, make sure you have the right sample type for the object")
   }
   
-  print('the dimensions of the table to be analyzed')
-  print(dim(SEQTABLE))
+  #print('the dimensions of the table to be analyzed')
+  #print(dim(SEQTABLE))
   
   # now convert 
   freq.table1 <- SEQTABLE %>%
