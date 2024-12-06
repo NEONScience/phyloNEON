@@ -75,16 +75,16 @@ createMetaTable <- function(neonUtilObject, gene=NA, sampleType=NA){
     stop("table not found, make sure you have the right sample type for the object")
   }
   
-  print('the dimensions of the table to be analyzed')
-  print(dim(METATABLE))
+  #print('the dimensions of the table to be analyzed')
+  #print(dim(METATABLE))
   
   sample.meta <- METATABLE %>%
     dplyr::select(all_of(selectFields)) %>%
     dplyr::mutate(sampleName = dnaSampleID) %>%
     dplyr::distinct(.keep_all = TRUE) %>%
-    column_to_rownames(var = "dnaSampleID")
+    tibble::column_to_rownames(var = "dnaSampleID")
   
-  META <- sample_data(sample.meta)
+  META <- phyloseq::sample_data(sample.meta)
   
   return(META)
   

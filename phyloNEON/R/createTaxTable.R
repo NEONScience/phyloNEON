@@ -75,25 +75,26 @@ createTaxTable <- function(neonUtilObject, gene=NA, sampleType=NA){
     stop("table not found, make sure you have the right sample type for the object")
   }
   
-  print('the dimensions of the table to be analyzed')
-  print(dim(SEQTABLE))
+  #print('the dimensions of the table to be analyzed')
+  #print(dim(SEQTABLE))
   
   mct.tax <- SEQTABLE %>%
-    mutate(species = specificEpithet) %>%
-    mutate(Feature.ID = sequenceName) %>%
-    select(all_of(selectRanks)) %>%
-    mutate(across(.fns = ~ replace_na(as.character(.x), ""))) %>%
+    dplyr::mutate(species = specificEpithet) %>%
+    dplyr::mutate(Feature.ID = sequenceName) %>%
+    dplyr::select(all_of(selectRanks)) %>%
+    dplyr::mutate(across(.fns = ~ replace_na(as.character(.x), ""))) %>%
     unique() 
   
   tax.matrix <- mct.tax %>%
     replace(is.na(.),"") %>%
     remove_rownames %>%
-    column_to_rownames(var = "Feature.ID") %>%
+    tibble::column_to_rownames(var = "Feature.ID") %>%
     as.matrix(rownames=T)
   
-  TAX <- tax_table(tax.matrix)
+  TAX <- phyloseq::tax_table(tax.matrix)
   
   return(TAX)
   
 }
+
 

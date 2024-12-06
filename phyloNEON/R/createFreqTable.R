@@ -76,19 +76,19 @@ createFreqTable <- function(neonUtilObject, gene=NA, sampleType=NA){
   
   # now convert 
   freq.table1 <- SEQTABLE %>%
-    select(sequenceName,dnaSampleID,individualCount) %>%
-    pivot_wider(
+    dplyr::select(sequenceName,dnaSampleID,individualCount) %>%
+    tidyr::pivot_wider(
       names_from = dnaSampleID,
       values_from = individualCount,
     ) %>%
-    column_to_rownames(var = 'sequenceName') %>%
+    tibble::column_to_rownames(var = 'sequenceName') %>%
     replace(is.na(.), 0)
   
-  freq.table2 <- mutate_all(freq.table1, function(x) as.numeric(as.character(x)))
+  freq.table2 <- dplyr::mutate_all(freq.table1, function(x) as.numeric(as.character(x)))
   
   otumat <- as.matrix(freq.table2)
   
-  OTU = otu_table(otumat, taxa_are_rows = TRUE)
+  OTU = phyloseq::otu_table(otumat, taxa_are_rows = TRUE)
   
   return(OTU)
   
