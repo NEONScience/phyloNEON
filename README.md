@@ -2,6 +2,17 @@
 
 A set of tools in R and Python to run phylogenetic and taxonomic analyses on NEON and related data
 
+## Installation
+
+To install phyloNEON, you will need the `devtools` package.
+
+```
+library(devtools)
+
+install_github("NEONScience/phyloNEON/phyloNEON")
+
+```
+
 ## Accessing NEON data 
 
 The initial functions of **phyloNEON** were developed to allow for converting data downloaded from NEON into formats that can easily be imported into other programs. Additional functions will be added, so watch this space. The first example below is to convert *Microbe Community Taxonomy* data into formats for importing into the popular R package [**Phyloseq**](https://joey711.github.io/phyloseq/). 
@@ -22,7 +33,7 @@ soil.mct <- loadByProduct(
   startdate = "2021-01",
   enddate = "2021-12",
   package='expanded',
-  site = c('BONA','HARV','NIWO'),
+  site = c('BONA','HARV','NIWO'))
 
 ```
 
@@ -53,6 +64,11 @@ soil.mct.tax <- createTaxTable(soil.mct, gene = 'ITS',
 
 #### Create sample metadata table 
 
+This function will create a very basic metadata table that takes the information from the sample metadata table in the download. Additional metadata can be added (and watch this space for additional information and tutorials), but this function gives you the minimum to get started using Phyloseq.
 
+```
+library(phyloNEON)
 
+soil.meta <- createMetaTable(soil.mct,gene='ITS',sampleType = 'soil')
 
+```
