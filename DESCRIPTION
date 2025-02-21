@@ -1,0 +1,25 @@
+Package: phyloNEON
+Title: Utilities for working with genetic NEON data
+Version: 0.1.1
+Date: 2024-12-05
+Authors@R: 
+    person("Hugh", "Cross",email="crossh@battelleecology.org", role = c("aut", "cre"))
+Description: A set of utilities for working with NEON genetic data, including marker gene, DNA barcoding, DNA metabarcoding, metagenomic, 
+    and community taxonomy data downloaded from NEON. The initial functions are to convert data downloaded using neonUtilities into formats
+    that can be imported into other packages or programs for downstream analyses. More advanced functions include tools to help users to 
+    combine genetic data with associated NEON metadata, run data quality control, compile general statistics, and various phylogenetic data 
+    analyses. 
+Depends: R (>= 3.6)
+Imports: 
+    phyloseq, 
+    dplyr, 
+    tidyr, 
+    tibble, 
+    stringr, 
+    magrittr 
+License: GNU General Public License v3.0
+URL: https://github.com/NEONScience/phyloNEON
+BugReports: https://github.com/NEONScience/phyloNEON/issues
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
