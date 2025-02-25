@@ -109,6 +109,7 @@ createFreqTable <- function(neonUtilObject, gene=NA, sampleType=NA){
 
   # now convert, renaming resequenced samples if necessary
   freq.table1 <- SEQTABLE %>%
+    mutate(dnaSampleID = toupper(dnaSampleID)) %>%
     dplyr::mutate(seqID = sapply(fileName, function(x) getSeqID(x,gene))) %>%
     dplyr::mutate(dnaSampleID = case_when(dnaSampleID %in% dupeseq.samples ~ paste(dnaSampleID,seqID, sep = '_'),
                                  .default = dnaSampleID)) %>%
