@@ -23,8 +23,7 @@
 #' License: GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007
 #' @import phyloseq
 #' @import dplyr
-#' @importFrom tibble column_to_rownames
-#' @importFrom tibble remove_rownames
+#' @import tibble
 #' @importFrom tidyr replace_na
 #' @export
 
