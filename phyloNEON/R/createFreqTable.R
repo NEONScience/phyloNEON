@@ -19,7 +19,11 @@
 #' }
 #' @references
 #' License: GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007
-
+#' @importFrom ape node.depth
+#' @importFrom dplyr select mutate_all
+#' @importFrom tidyr pivot_wider
+#' @importFrom tibble column_to_rownames
+#' @importFrom phyloseq otu_table
 #' @export
 
 # changelog and author contributions / copyrights
