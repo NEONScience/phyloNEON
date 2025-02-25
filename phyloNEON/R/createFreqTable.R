@@ -78,8 +78,21 @@ createFreqTable <- function(neonUtilObject, gene=NA, sampleType=NA){
   #print('the dimensions of the table to be analyzed')
   #print(dim(SEQTABLE))
   
-  # now convert 
+  # get resequenced samples
+  dupeseq <- SEQTABLE %>%
+  select(dnaSampleID) |>
+  group_by_all() |>
+  filter(n() > 1) |>
+  ungroup() %>%
+  unique()
+
+  dupeseq.samples = dupeseq$dnaSampleID
+
+  # now convert, renaming resequenced samples if necessary
   freq.table1 <- SEQTABLE %>%
+    dplyr::mutate(seqID = sapply(downloadFileName, function(x) phyloNEON::getSeqID(x,gene))) %>%
+    dplyr::mutate(dnaSampleID = case_when(dnaSampleID %in% dupeseq.samples ~ paste(dnaSampleID,seqID, sep = '_'),
+                                 .default = dnaSampleID)) %>%
     dplyr::select(sequenceName,dnaSampleID,individualCount) %>%
     tidyr::pivot_wider(
       names_from = dnaSampleID,

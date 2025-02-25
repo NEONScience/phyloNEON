@@ -31,7 +31,7 @@
 
 
 getSeqID <- function(taxname,gene){
-  renamed <- splitID(taxname,5,6)
+  renamed <- phyloNEON::splitID(taxname,5,6)
   seqID <- gsub(gene,'',renamed)
   seqID <- gsub('_','',seqID)
   return(seqID)
