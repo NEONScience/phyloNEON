@@ -79,7 +79,26 @@ createFreqTable <- function(neonUtilObject, gene=NA, sampleType=NA){
   #print(dim(SEQTABLE))
   
   # get resequenced samples
-  dupeseq <- SEQTABLE %>%
+  # have to use the metadata table here, first get correct one
+  # get the right table 
+  if(gene == 'ITS'){
+    if(sampleType == 'soil'){
+      METATABLE = neonUtilObject$mct_soilSampleMetadata_ITS
+    } else if(sampleType == 'benthic'){
+      METATABLE = neonUtilObject$mct_benthicSampleMetadata_ITS
+    } else if(sampleType == 'surface'){
+      METATABLE = neonUtilObject$mct_surfaceSampleMetadata_ITS
+    }
+  } else if(gene == '16S'){
+    if(sampleType == 'soil'){
+      METATABLE = neonUtilObject$mct_soilSampleMetadata_16S
+    } else if(sampleType == 'benthic'){
+      METATABLE = neonUtilObject$mct_benthicSampleMetadata_16S
+    } else if(sampleType == 'surface'){
+      METATABLE = neonUtilObject$mct_surfaceSampleMetadata_16S
+  }}
+ 
+  dupeseq <- METATABLE %>%
   select(dnaSampleID) |>
   group_by_all() |>
   filter(n() > 1) |>
