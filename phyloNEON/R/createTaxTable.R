@@ -24,6 +24,8 @@
 #' @import phyloseq
 #' @import dplyr
 #' @importFrom tibble column_to_rownames
+#' @importFrom tibble remove_rownames
+#' @importFrom tidyr replace_na
 #' @export
 
 # changelog and author contributions / copyrights
@@ -84,12 +86,12 @@ createTaxTable <- function(neonUtilObject, gene=NA, sampleType=NA){
     dplyr::mutate(species = specificEpithet) %>%
     dplyr::mutate(Feature.ID = sequenceName) %>%
     dplyr::select(all_of(selectRanks)) %>%
-    dplyr::mutate(across(.fns = ~ replace_na(as.character(.x), ""))) %>%
+    dplyr::mutate(across(.fns = ~ tidyr::replace_na(as.character(.x), ""))) %>%
     unique() 
   
   tax.matrix <- mct.tax %>%
     replace(is.na(.),"") %>%
-    remove_rownames %>%
+    tibble::remove_rownames %>%
     tibble::column_to_rownames(var = "Feature.ID") %>%
     as.matrix(rownames=T)
   
