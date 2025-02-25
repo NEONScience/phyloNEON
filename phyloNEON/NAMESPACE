@@ -3,6 +3,8 @@
 export(createFreqTable)
 export(createMetaTable)
 export(createTaxTable)
+export(getSeqID)
+export(splitID)
 import(dplyr)
 import(magrittr)
 import(phyloseq)
