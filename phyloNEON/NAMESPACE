@@ -3,3 +3,8 @@
 export(createFreqTable)
 export(createMetaTable)
 export(createTaxTable)
+import(dplyr)
+import(magrittr)
+importFrom(phyloseq,otu_table)
+importFrom(tibble,column_to_rownames)
+importFrom(tidyr,pivot_wider)
