@@ -91,7 +91,7 @@ createTaxTable <- function(neonUtilObject, gene=NA, sampleType=NA){
   
   tax.matrix <- mct.tax %>%
     replace(is.na(.),"") %>%
-    tibble::remove_rownames %>%
+    remove_rownames %>%
     tibble::column_to_rownames(var = "Feature.ID") %>%
     as.matrix(rownames=T)
   
