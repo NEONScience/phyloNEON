@@ -16,7 +16,8 @@ Imports:
     tidyr, 
     tibble, 
     stringr, 
-    magrittr 
+    magrittr
+biocViews:
 License: GNU General Public License v3.0
 URL: https://github.com/NEONScience/phyloNEON
 BugReports: https://github.com/NEONScience/phyloNEON/issues

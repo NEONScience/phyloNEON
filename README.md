@@ -72,3 +72,29 @@ library(phyloNEON)
 soil.meta <- createMetaTable(soil.mct,gene='ITS',sampleType = 'soil')
 
 ```
+
+#### Create **phyloseq** object
+
+Now we put it all together. The OTU, taxa, and metadata tables created by the phyloNEON functions can now be imported into phyloseq. This will use the phyloseq command `phyloseq` to create the object. 
+
+
+```
+library(phyloseq)
+
+soil.phylo <- phyloseq(soil.mct.freq,soil.mct.tax,soil.meta)
+
+# check the object
+soil.phylo
+
+# output:
+
+phyloseq-class experiment-level object
+otu_table()   OTU Table:         [ 14299 taxa and 198 samples ]
+sample_data() Sample Data:       [ 198 samples by 5 sample variables ]
+tax_table()   Taxonomy Table:    [ 14299 taxa by 7 taxonomic ranks ]
+
+
+```
+
+The `soil.phylo` object is now a phyloseq object, for which there is a wealth of tutorials and instructions available to run taxonomic and ecological analyses on the NEON data. 
+
