@@ -18,6 +18,7 @@ Imports:
     stringr, 
     magrittr
 biocViews:
+Remotes: bioc::3.21/phyloseq, bioc::release/Biobase
 License: GNU General Public License v3.0
 URL: https://github.com/NEONScience/phyloNEON
 BugReports: https://github.com/NEONScience/phyloNEON/issues
