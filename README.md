@@ -1,5 +1,5 @@
 
-![phyloNEON logo](images/phyloNEON_logo1.png)
+![phyloNEON logo](images/phyloNEON_logo2.png)
 
 A set of tools in R and Python to run phylogenetic and taxonomic analyses on NEON and related data
 
