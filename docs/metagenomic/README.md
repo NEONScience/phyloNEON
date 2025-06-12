@@ -2,6 +2,7 @@
 
 # Getting started with NEON metagenomic data
 
+We have provided some tools and guidelines to help users access NEON metagenomic data on the JGI and NMDC data portals.
 
 ## Accessing NEON samples on the JGI IMG data portal
 
@@ -28,6 +29,88 @@ You can search the table to find NEON samples that are on JGI.
 
 ### Opening web pages on the JGI IMG data portal 
 
-We have added a function, `openIMG` on this package that enables the user to search the ***neon.metaDB*** database and open the landing page for each sample (limited to 15 queries at a time). 
+We have added a function, `openIMG` on this package that enables the user to search the ***neon.metaDB*** database and open the landing page for each sample (limited to 15 queries at a time). The user just needs to input the `dnaSampleID` or list of `dnaSampleID`s to the function, and the page will open in the default browser on your computer:
+
+```
+library(phyloNEON)
+
+openIMG('BONA_013-O-20230710-COMP-DNA1')
+
+```
+
+You should see the taxon oid page open: 
+
+![bona img landing page](../../images/bona_example_on_img.png)
+
+You can also search the ***neon.metaDB*** database to find lists of samples that you would like to explore on the IMG data portal. 
+
+For example, if you want to find NEON samples from the **BONA** site that have ten or more bins, you can use the [tidyverse](https://www.tidyverse.org/) package to filter the database:
+
+```
+library(phyloNEON)
+library(tidyverse)
+
+query1 <- neon.metaDB %>%
+  dplyr::filter(siteID == 'BONA') %>%
+  dplyr::filter(metaBATbinCount > 10)
+
+dim(query1) 
+# [1] 11 32
+
+# you need to input a list, so specify the dnaSampleID of your query:
+openIMG(query1$dnaSampleID)
+
+```
+
+The function should open 11 webpages in your default browser, one for each NEON sample queried.
+
+As a little more involved example, if you wanted to bring up the webpages for all samples sequenced from the Wind River NEON site (WREF) in 2021. In this example, the tidyverse command `pull` is added, which will result in a vector of just the dnaSampleIDs. 
+
+```
+library(phyloNEON)
+library(tidyverse)
+
+query2 <- neon.metaDB %>%
+  dplyr::filter(siteID == 'WREF') %>%
+  dplyr::filter(as.Date(collectDate, "%Y%m%d") > '2021-01-01' & as.Date(collectDate, "%Y%m%d") < '2021-12-31') %>%
+  dplyr::pull(dnaSampleID)
+
+# check how many samples (using length() this time)
+length(query2) 
+# [1]  7
+
+# open the pages for each site. Note here the query is a vector so we do not have to input query2$dnaSampleID
+openIMG(query2)
+
+```
+
+You can use tidyverse as well as other R packages to search the table and create a list of samples. 
+
+### Accessing NEON co-assemblies
+
+In the pilot phase of the collaboration with JGI, several combined assemblies of NEON samples were done. These are also listed in ***neon.metaDB***
+
+![co-assembly screenshot](../../images/neon_coassemblies_screenshot.png)
+
+Here is how you can filter the table for the co-assemblies and access. The `dnaSampleID` for the assemblies is different from the rest, as it is composed of more than one sample. But you can still open the IMG pages, either separately or as a group. 
+
+```
+library(phyloNEON)
+library(tidyverse)
+
+# open a single co-assembly IMG page:
+openIMG('NEON COMBINED ASSEMBLY')
+
+# or filter the database and open them all
+neon.coassemblies <- neon.metaDB %>%
+  dplyr::filter(`GOLD Analysis Project Type` == 'Combined Assembly')
+
+openIMG(neon.coassemblies$dnaSampleID)
+
+
+```
+
+These examples should help you get started. Please open an issue on this repo if you have questions
+
 
 
