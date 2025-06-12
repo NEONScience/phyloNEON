@@ -32,13 +32,21 @@
 openIMG <- function(sampleID,sourceTable = neon.metaDB){
   # add persistent link
   taxonPers <- "https://identifiers.org/img.taxon:"
-  z <- dplyr::filter(sourceTable, dnaSampleID %in% sampleID) %>%
-    dplyr::pull(imgGenomeID)
-  a <- paste0(taxonPers,z)
-  for (i in a){
-    browseURL(i)
+  # check that query is a vector
+  if(!is.vector(sampleID)){
+    stop('Your query must be a vector, please correct your query and try again.\n HINT: try query$dnaSampleID')
+  } else {
+    z <- dplyr::filter(sourceTable, dnaSampleID %in% sampleID) %>%
+      dplyr::pull(imgGenomeID)
+    # check that there are no more than 15 queries
+    if(length(z) > 15){
+      stop("You cannot open more than 15 JGI IMG pages at once, please reduce the number and try again")
+    } else{
+      a <- paste0(taxonPers,z)
+      for (i in a){
+        browseURL(i)}
+    }
   }
-  
 }
 
 
