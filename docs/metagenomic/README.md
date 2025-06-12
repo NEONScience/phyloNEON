@@ -84,6 +84,23 @@ openIMG(query2)
 
 ```
 
+About a third of the NEON samples on the JGI portal were sequenced by JGI and have much increased depth compared to the older samples. 
+If you wanted to focus on these samples, you can filter them by `Sequencing Center` or `ITS Proposal ID`:
+
+```
+query3 <- neon.metaDB %>%
+  dplyr::filter(`Sequencing Center` == 'DOE Joint Genome Institute  (JGI)')
+
+# or by ITS Proposal ID
+
+query3a <- neon.metaDB %>%
+  dplyr::filter(`ITS Proposal ID` %in% c('509938','509462'))
+
+
+
+```
+
+
 You can use tidyverse as well as other R packages to search the table and create a list of samples. 
 
 ### Accessing NEON co-assemblies
@@ -92,7 +109,7 @@ In the pilot phase of the collaboration with JGI, several combined assemblies of
 
 ![co-assembly screenshot](../../images/neon_coassemblies_screenshot.png)
 
-Here is how you can filter the table for the co-assemblies and access. The `dnaSampleID` for the assemblies is different from the rest, as it is composed of more than one sample. But you can still open the IMG pages, either separately or as a group. 
+Here is how you can filter the table for the co-assemblies and access. The `dnaSampleID`s for the combined assemblies is different from the rest, as it is composed of more than one sample. But you can still open the IMG pages, either separately or as a group. 
 
 ```
 library(phyloNEON)
