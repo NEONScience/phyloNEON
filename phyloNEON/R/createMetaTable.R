@@ -50,24 +50,24 @@ createMetaTable <- function(neonUtilObject, gene=NA, sampleType=NA){
   if(gene == 'ITS'){
     if(sampleType == 'soil'){
       METATABLE = neonUtilObject$mct_soilSampleMetadata_ITS
-      selectFields = c("dnaSampleID","siteID","plotID","collectDate","sampleMaterial")
+      selectFields = c("dnaSampleID","siteID","plotID","collectDate","sampleMaterial","sampleName")
     } else if(sampleType == 'benthic'){
       METATABLE = neonUtilObject$mct_benthicSampleMetadata_ITS
-      selectFields = c("dnaSampleID","siteID","collectDate","sampleMaterial")
+      selectFields = c("dnaSampleID","siteID","collectDate","sampleMaterial","sampleName")
     } else if(sampleType == 'surface'){
       METATABLE = neonUtilObject$mct_surfaceWaterSampleMetadata_ITS
-      selectFields = c("dnaSampleID","siteID","collectDate","sampleMaterial")
+      selectFields = c("dnaSampleID","siteID","collectDate","sampleMaterial","sampleName")
     }
   } else if(gene == '16S'){
     if(sampleType == 'soil'){
       METATABLE = neonUtilObject$mct_soilSampleMetadata_16S
-      selectFields = c("dnaSampleID","siteID","plotID","collectDate","sampleMaterial")
+      selectFields = c("dnaSampleID","siteID","plotID","collectDate","sampleMaterial","sampleName")
     } else if(sampleType == 'benthic'){
       METATABLE = neonUtilObject$mct_benthicSampleMetadata_16S
-      selectFields = c("dnaSampleID","siteID","collectDate","sampleMaterial")
+      selectFields = c("dnaSampleID","siteID","collectDate","sampleMaterial","sampleName")
     } else if(sampleType == 'surface'){
       METATABLE = neonUtilObject$mct_surfaceWaterSampleMetadata_16S
-      selectFields = c("dnaSampleID","siteID","collectDate","sampleMaterial")
+      selectFields = c("dnaSampleID","siteID","collectDate","sampleMaterial","sampleName")
     }}
   
   # check that table is right 
