@@ -110,18 +110,18 @@ createFreqTable <- function(neonUtilObject, gene=NA, sampleType=NA){
   # now convert, renaming resequenced samples if necessary
   freq.table1 <- SEQTABLE %>%
     mutate(dnaSampleID = toupper(dnaSampleID)) %>%
-    dplyr::mutate(seqID = sapply(fileName, function(x) getSeqID(x,gene))) %>%
+    dplyr::mutate(seqID = sapply(fileName, function(x) parseMapFile(x,gene))) %>%
     dplyr::mutate(dnaSampleID = case_when(dnaSampleID %in% dupeseq.samples ~ paste(dnaSampleID,seqID, sep = '_'),
-                                 .default = dnaSampleID)) %>%
+                                          .default = dnaSampleID)) %>%
     dplyr::select(sequenceName,dnaSampleID,individualCount) %>%
     tidyr::pivot_wider(
       names_from = dnaSampleID,
       values_from = individualCount,
     ) %>%
-    tibble::column_to_rownames(var = 'sequenceName') %>%
-    replace(is.na(.), 0)
+    tibble::column_to_rownames(var = 'sequenceName')
   
-  freq.table2 <- dplyr::mutate_all(freq.table1, function(x) as.numeric(as.character(x)))
+  freq.table2 <- dplyr::mutate_all(freq.table1, function(x) as.numeric(as.character(x))) %>%
+    replace(is.na(.), 0)
   
   otumat <- as.matrix(freq.table2)
   

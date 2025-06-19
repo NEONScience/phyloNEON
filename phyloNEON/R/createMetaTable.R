@@ -79,12 +79,24 @@ createMetaTable <- function(neonUtilObject, gene=NA, sampleType=NA){
   
   #print('the dimensions of the table to be analyzed')
   #print(dim(METATABLE))
+  dupeseq <- METATABLE %>%
+    select(dnaSampleID) |>
+    group_by_all() |>
+    filter(n() > 1) |>
+    ungroup() %>%
+    unique()
+  
+  dupeseq.samples = dupeseq$dnaSampleID
   
   sample.meta <- METATABLE %>%
+    mutate(dnaSampleID = toupper(dnaSampleID)) %>%
+    dplyr::mutate(seqID = sapply(downloadFileName, function(x) parseMapFile(x,gene))) %>%
+    dplyr::mutate(sampleName = case_when(dnaSampleID %in% dupeseq.samples ~ paste(dnaSampleID,seqID, sep = '_'),
+                                         .default = dnaSampleID)) %>%
     dplyr::select(all_of(selectFields)) %>%
-    dplyr::mutate(sampleName = dnaSampleID) %>%
     dplyr::distinct(.keep_all = TRUE) %>%
-    tibble::column_to_rownames(var = "dnaSampleID")
+    tibble::column_to_rownames(var = "sampleName")
+  
   
   META <- phyloseq::sample_data(sample.meta)
   
