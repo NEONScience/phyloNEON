@@ -4,7 +4,13 @@
 \alias{createFreqTable}
 \title{Convert NEON download to OTU frequency table for Phyloseq package}
 \usage{
-createFreqTable(neonUtilObject, gene = NA, sampleType = NA)
+createFreqTable(
+  neonUtilObject = NULL,
+  taxtable = NULL,
+  metadata = NULL,
+  gene = NA,
+  sampleType = NA
+)
 }
 \arguments{
 \item{neonUtilObject}{the object downloaded with neonUtilities loadByProduct}
