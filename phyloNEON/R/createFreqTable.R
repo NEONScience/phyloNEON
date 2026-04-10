@@ -37,12 +37,21 @@
 # parameters: neonUtilities object,
 # Gene: "ITS" or "16S",
 # sampleType: 'soil', 'benthic', or 'surface'
-
-createFreqTable <- function(neonUtilObject, gene=NA, sampleType=NA){
+createFreqTable <- function(neonUtilObject=NULL,
+                             taxtable = NULL,
+                             metadata = NULL,
+                             gene=NA, sampleType=NA){
+  # check for both arguments
+  #
+  if(is.null(neonUtilObject)){
+    if(is.null(taxtable) || is.null(metadata)){
+      stop(print("You must provide both a taxtable and a metadata table OR an object with both"))
+    }
+  }
 
   # check gene
-  if(!gene %in% c('ITS','16S')){
-    stop(paste(gene,"is not a valid entry for gene. Gene must be 16S or ITS",sep=" "))
+  if(!gene %in% c('ITS','16S','F230','BR5','BE','MLJG')){
+    stop(paste(gene,"is not a valid entry for gene. Gene must be one of 16S, ITS, F230, BR5, BE, MLJG",sep=" "))
   }
 
   # check sample type
@@ -51,22 +60,28 @@ createFreqTable <- function(neonUtilObject, gene=NA, sampleType=NA){
   }
 
   # get the right table
-  if(gene == 'ITS'){
-    if(sampleType == 'soil'){
-      SEQTABLE = neonUtilObject$mct_soilPerSampleTaxonomy_ITS
-    } else if(sampleType == 'benthic'){
-      SEQTABLE = neonUtilObject$mct_benthicPerSampleTaxonomy_ITS
-    } else if(sampleType == 'surface'){
-      SEQTABLE = neonUtilObject$mct_surfaceWaterPerSampleTaxonomy_ITS
-    }
-  } else if(gene == '16S'){
-    if(sampleType == 'soil'){
-      SEQTABLE = neonUtilObject$mct_soilPerSampleTaxonomy_16S
-    } else if(sampleType == 'benthic'){
-      SEQTABLE = neonUtilObject$mct_benthicPerSampleTaxonomy_16S
-    } else if(sampleType == 'surface'){
-      SEQTABLE = neonUtilObject$mct_surfaceWaterPerSampleTaxonomy_16S
-  }}
+  if(!is.null(taxtable)){
+    SEQTABLE = taxtable
+  } else {
+    if(gene == 'ITS'){
+      if(sampleType == 'soil'){
+        SEQTABLE = neonUtilObject$mct_soilPerSampleTaxonomy_ITS
+      } else if(sampleType == 'benthic'){
+        SEQTABLE = neonUtilObject$mct_benthicPerSampleTaxonomy_ITS
+      } else if(sampleType == 'surface'){
+        SEQTABLE = neonUtilObject$mct_surfaceWaterPerSampleTaxonomy_ITS
+      }
+    } else if(gene == '16S'){
+      if(!is.null(taxtable)){
+        SEQTABLE = taxtable
+      } else if(sampleType == 'soil'){
+        SEQTABLE = neonUtilObject$mct_soilPerSampleTaxonomy_16S
+      } else if(sampleType == 'benthic'){
+        SEQTABLE = neonUtilObject$mct_benthicPerSampleTaxonomy_16S
+      } else if(sampleType == 'surface'){
+        SEQTABLE = neonUtilObject$mct_surfaceWaterPerSampleTaxonomy_16S
+      }}
+  }
 
   # check that table is right
   if(exists("SEQTABLE") && is.data.frame(get("SEQTABLE"))){
@@ -81,37 +96,42 @@ createFreqTable <- function(neonUtilObject, gene=NA, sampleType=NA){
   # get resequenced samples
   # have to use the metadata table here, first get correct one
   # get the right table
-  if(gene == 'ITS'){
-    if(sampleType == 'soil'){
-      METATABLE = neonUtilObject$mct_soilSampleMetadata_ITS
-    } else if(sampleType == 'benthic'){
-      METATABLE = neonUtilObject$mct_benthicSampleMetadata_ITS
-    } else if(sampleType == 'surface'){
-      METATABLE = neonUtilObject$mct_surfaceWaterSampleMetadata_ITS
-    }
-  } else if(gene == '16S'){
-    if(sampleType == 'soil'){
-      METATABLE = neonUtilObject$mct_soilSampleMetadata_16S
-    } else if(sampleType == 'benthic'){
-      METATABLE = neonUtilObject$mct_benthicSampleMetadata_16S
-    } else if(sampleType == 'surface'){
-      METATABLE = neonUtilObject$mct_surfaceWaterSampleMetadata_16S
-  }}
+  if(!is.null(metadata)){
+    METATABLE = metadata
+  } else {
+    if(gene == 'ITS'){
+      if(sampleType == 'soil'){
+        METATABLE = neonUtilObject$mct_soilSampleMetadata_ITS
+      } else if(sampleType == 'benthic'){
+        METATABLE = neonUtilObject$mct_benthicSampleMetadata_ITS
+      } else if(sampleType == 'surface'){
+        METATABLE = neonUtilObject$mct_surfaceWaterSampleMetadata_ITS
+      }
+    } else if(gene == '16S'){
+      if(sampleType == 'soil'){
+        METATABLE = neonUtilObject$mct_soilSampleMetadata_16S
+      } else if(sampleType == 'benthic'){
+        METATABLE = neonUtilObject$mct_benthicSampleMetadata_16S
+      } else if(sampleType == 'surface'){
+        METATABLE = neonUtilObject$mct_surfaceWaterSampleMetadata_16S
+      }}
+  }
 
   dupeseq <- METATABLE %>%
-  dplyr::select(dnaSampleID) |>
-  dplyr::group_by_all() |>
-  dplyr::filter(n() > 1) |>
-  dplyr::ungroup() %>%
-  unique()
+    dplyr::select(dnaSampleID) |>
+    dplyr::group_by_all() |>
+    dplyr::filter(n() > 1) |>
+    dplyr::ungroup() %>%
+    unique()
 
   dupeseq.samples = dupeseq$dnaSampleID
-
+  # sapply(fileName, function(x) parseMapFile(x,gene))
   # now convert, renaming resequenced samples if necessary
   freq.table1 <- SEQTABLE %>%
+    mutate(seqrunID = case_when(grepl('AY19',sequencerRunID) ~ toupper(sapply(sequencerRunID, function(x) splitID(x,3,3))),
+                                .default = sequencerRunID)) %>%
     mutate(dnaSampleID = toupper(dnaSampleID)) %>%
-    dplyr::mutate(seqID = sapply(fileName, function(x) parseMapFile(x,gene))) %>%
-    dplyr::mutate(dnaSampleID = case_when(dnaSampleID %in% dupeseq.samples ~ paste(dnaSampleID,seqID, sep = '_'),
+    dplyr::mutate(dnaSampleID = case_when(dnaSampleID %in% dupeseq.samples ~ paste(dnaSampleID,seqrunID,sep = '_'),
                                           .default = dnaSampleID)) %>%
     dplyr::select(sequenceName,dnaSampleID,individualCount) %>%
     tidyr::pivot_wider(
